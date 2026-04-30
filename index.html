@@ -19,6 +19,12 @@
                 <svg id="radar"></svg>
             </div>
             
+            <div class="legend">
+                <div class="legend-item"><span class="dot core"></span> Core (Adopt)</div>
+                <div class="legend-item"><span class="dot rising"></span> Rising (Trial/Assess)</div>
+                <div class="legend-item"><span class="dot experimental"></span> Experimental (Hold/Wait)</div>
+            </div>
+
             <div id="details-panel" class="hidden">
                 <button id="close-details">&times;</button>
                 <div id="details-content">
@@ -50,13 +56,33 @@
                 </div>
             </div>
         </main>
+
+        <section id="list-section">
+            <h2>Ecosystem Directory</h2>
+            <div class="list-controls">
+                <input type="text" id="tool-search" placeholder="Search tools...">
+                <div class="filter-group">
+                    <select id="layer-filter">
+                        <option value="all">All Layers</option>
+                        <option value="Orchestration">Orchestration</option>
+                        <option value="Agentic">Agentic</option>
+                        <option value="Observability">Observability</option>
+                        <option value="Data/Vector">Data/Vector</option>
+                    </select>
+                    <select id="status-filter">
+                        <option value="all">All Statuses</option>
+                        <option value="Core">Core (Adopt)</option>
+                        <option value="Rising">Rising (Trial/Assess)</option>
+                        <option value="Experimental">Experimental (Hold/Wait)</option>
+                    </select>
+                </div>
+            </div>
+            <div id="tool-list" class="tool-grid">
+                <!-- List items will be injected here -->
+            </div>
+        </section>
         
         <footer>
-            <div class="legend">
-                <div class="legend-item"><span class="dot core"></span> Core (Adopt)</div>
-                <div class="legend-item"><span class="dot rising"></span> Rising (Trial/Assess)</div>
-                <div class="legend-item"><span class="dot experimental"></span> Experimental (Hold/Wait)</div>
-            </div>
         </footer>
     </div>
     <script src="radar.js"></script>

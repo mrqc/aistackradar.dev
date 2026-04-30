@@ -59,7 +59,9 @@ svg.selectAll(".quadrant-label")
     .text(d => d.name);
 
 // Load data
-d3.csv("aistackradar_agents.csv").then(data => {
+d3.csv("radar-data.csv").then(data => {
+    let allData = data;
+    
     const nodes = data.map(d => {
         const quad = quadrants.find(q => q.name === d.Layer) || quadrants[1]; // Default to Agentic
         const ring = rings.find(r => r.name === d["Radar Status"]) || rings[2]; // Default to Experimental
@@ -80,6 +82,40 @@ d3.csv("aistackradar_agents.csv").then(data => {
         };
     });
 
+    renderRadar(nodes);
+    renderList(allData);
+
+    // Search and Filter Listeners
+    d3.select("#tool-search").on("input", function() {
+        filterAndRender();
+    });
+
+    d3.select("#layer-filter").on("change", function() {
+        filterAndRender();
+    });
+
+    d3.select("#status-filter").on("change", function() {
+        filterAndRender();
+    });
+
+    function filterAndRender() {
+        const searchTerm = d3.select("#tool-search").property("value").toLowerCase();
+        const layerFilter = d3.select("#layer-filter").property("value");
+        const statusFilter = d3.select("#status-filter").property("value");
+
+        const filtered = allData.filter(d => {
+            const matchesSearch = d["Tool Name"].toLowerCase().includes(searchTerm) || 
+                                d["One-Line Pitch"].toLowerCase().includes(searchTerm);
+            const matchesLayer = layerFilter === "all" || d.Layer === layerFilter;
+            const matchesStatus = statusFilter === "all" || d["Radar Status"] === statusFilter;
+            return matchesSearch && matchesLayer && matchesStatus;
+        });
+
+        renderList(filtered);
+    }
+});
+
+function renderRadar(nodes) {
     const nodeGroups = svg.selectAll(".node")
         .data(nodes)
         .enter()
@@ -98,7 +134,31 @@ d3.csv("aistackradar_agents.csv").then(data => {
         .attr("dx", 10)
         .attr("dy", 4)
         .text(d => d["Tool Name"]);
-});
+}
+
+function renderList(data) {
+    const listContainer = d3.select("#tool-list");
+    listContainer.html(""); // Clear existing
+
+    const cards = listContainer.selectAll(".tool-card")
+        .data(data)
+        .enter()
+        .append("div")
+        .attr("class", "tool-card")
+        .on("click", (event, d) => {
+            showDetails(d);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+    cards.append("h3").text(d => d["Tool Name"]);
+    cards.append("p").attr("class", "card-pitch").text(d => d["One-Line Pitch"]);
+    
+    const meta = cards.append("div").attr("class", "card-meta");
+    meta.append("span").attr("class", "card-layer").text(d => d.Layer);
+    meta.append("span")
+        .attr("class", d => `card-status ${d["Radar Status"].toLowerCase()}`)
+        .text(d => d["Radar Status"]);
+}
 
 function showDetails(d) {
     const panel = d3.select("#details-panel");
