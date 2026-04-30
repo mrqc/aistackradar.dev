@@ -61,8 +61,9 @@ svg.selectAll(".quadrant-label")
 // Load data
 d3.csv("radar-data.csv").then(data => {
     let allData = data;
+    const radarData = data.slice(-30);
     
-    const nodes = data.map(d => {
+    const nodes = radarData.map(d => {
         const quad = quadrants.find(q => q.name === d.Layer) || quadrants[1]; // Default to Agentic
         const ring = rings.find(r => r.name === d["Radar Status"]) || rings[2]; // Default to Experimental
         
@@ -147,7 +148,6 @@ function renderList(data) {
         .attr("class", "tool-card")
         .on("click", (event, d) => {
             showDetails(d);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
     cards.append("h3").text(d => d["Tool Name"]);
@@ -180,9 +180,11 @@ d3.select("#close-details").on("click", () => {
     d3.select("#details-panel").classed("hidden", true);
 });
 
-// Close panel when clicking outside the radar nodes (optional but good)
+// Close panel when clicking outside the radar nodes or tool cards (optional but good)
 d3.select("body").on("click", (event) => {
-    if (!event.target.closest(".node") && !event.target.closest("#details-panel")) {
+    if (!event.target.closest(".node") && 
+        !event.target.closest(".tool-card") && 
+        !event.target.closest("#details-panel")) {
         d3.select("#details-panel").classed("hidden", true);
     }
 });
