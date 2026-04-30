@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Stack Radar</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Stack Radar</h1>
+            <p>Visualizing the ecosystem of AI agents and orchestration tools.</p>
+        </header>
+        
+        <main>
+            <div id="radar-container">
+                <svg id="radar"></svg>
+            </div>
+            
+            <div id="details-panel" class="hidden">
+                <button id="close-details">&times;</button>
+                <div id="details-content">
+                    <h2 id="tool-name"></h2>
+                    <p class="tagline" id="tool-pitch"></p>
+                    <div class="meta-grid">
+                        <div class="meta-item">
+                            <strong>Layer:</strong> <span id="tool-layer"></span>
+                        </div>
+                        <div class="meta-item">
+                            <strong>Status:</strong> <span id="tool-status"></span>
+                        </div>
+                        <div class="meta-item">
+                            <strong>Pricing:</strong> <span id="tool-pricing"></span>
+                        </div>
+                    </div>
+                    <div class="description-section">
+                        <h3>Key Features</h3>
+                        <p id="tool-features"></p>
+                    </div>
+                    <div class="description-section">
+                        <h3>AI Summary</h3>
+                        <p id="tool-summary"></p>
+                    </div>
+                    <div class="description-section">
+                        <h3>Website</h3>
+                        <a id="tool-url" href="#" target="_blank">Visit Website</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="legend">
+                <div class="legend-item"><span class="dot core"></span> Core (Adopt)</div>
+                <div class="legend-item"><span class="dot rising"></span> Rising (Trial/Assess)</div>
+                <div class="legend-item"><span class="dot experimental"></span> Experimental (Hold/Wait)</div>
+            </div>
+        </footer>
+    </div>
+    <script src="radar.js"></script>
+</body>
+</html>
