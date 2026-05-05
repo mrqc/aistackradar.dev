@@ -239,7 +239,7 @@ main {
     flex-wrap: wrap;
 }
 
-#tool-search, #layer-filter, #status-filter {
+#tool-search, #layer-filter, #status-filter, #language-filter {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
@@ -254,7 +254,7 @@ main {
     min-width: 250px;
 }
 
-#tool-search:focus, #layer-filter:focus, #status-filter:focus {
+#tool-search:focus, #layer-filter:focus, #status-filter:focus, #language-filter:focus {
     border-color: var(--accent);
 }
 
@@ -353,6 +353,18 @@ footer {
 .dot.core { background-color: var(--core-color); }
 .dot.rising { background-color: var(--rising-color); }
 .dot.experimental { background-color: var(--experimental-color); }
+
+@media (max-width: 1000px) {
+    #details-panel {
+        width: calc(100% - 4rem);
+        right: 2rem;
+        left: 2rem;
+        top: auto;
+        bottom: 2rem;
+        height: 40vh;
+    }
+}
+r: var(--experimental-color); }
 
 @media (max-width: 1000px) {
     #details-panel {

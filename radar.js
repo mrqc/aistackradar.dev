@@ -60,7 +60,24 @@ svg.selectAll(".quadrant-label")
 
 // Load data
 d3.csv("radar-data.csv").then(data => {
-    let allData = data;
+    const allData = data;
+
+    // Populate language filter
+    const languages = new Set();
+    allData.forEach(d => {
+        if (d.Language) {
+            d.Language.split(',').forEach(lang => {
+                const trimmed = lang.trim();
+                if (trimmed) languages.add(trimmed);
+            });
+        }
+    });
+    
+    const langSelect = d3.select("#language-filter");
+    Array.from(languages).sort().forEach(lang => {
+        langSelect.append("option").attr("value", lang).text(lang);
+    });
+
     const radarData = data.slice(-30);
     
     const nodes = radarData.map(d => {
@@ -99,17 +116,23 @@ d3.csv("radar-data.csv").then(data => {
         filterAndRender();
     });
 
+    d3.select("#language-filter").on("change", function() {
+        filterAndRender();
+    });
+
     function filterAndRender() {
         const searchTerm = d3.select("#tool-search").property("value").toLowerCase();
         const layerFilter = d3.select("#layer-filter").property("value");
         const statusFilter = d3.select("#status-filter").property("value");
+        const languageFilter = d3.select("#language-filter").property("value");
 
         const filtered = allData.filter(d => {
             const matchesSearch = d["Tool Name"].toLowerCase().includes(searchTerm) || 
                                 d["One-Line Pitch"].toLowerCase().includes(searchTerm);
             const matchesLayer = layerFilter === "all" || d.Layer === layerFilter;
             const matchesStatus = statusFilter === "all" || d["Radar Status"] === statusFilter;
-            return matchesSearch && matchesLayer && matchesStatus;
+            const matchesLanguage = languageFilter === "all" || (d.Language && d.Language.includes(languageFilter));
+            return matchesSearch && matchesLayer && matchesStatus && matchesLanguage;
         });
 
         renderList(filtered);
@@ -158,6 +181,11 @@ function renderList(data) {
     meta.append("span")
         .attr("class", d => `card-status ${d["Radar Status"].toLowerCase()}`)
         .text(d => d["Radar Status"]);
+    
+    meta.filter(d => d.Language)
+        .append("span")
+        .attr("class", "card-language")
+        .text(d => d.Language);
 }
 
 function showDetails(d) {
@@ -169,6 +197,7 @@ function showDetails(d) {
     d3.select("#tool-layer").text(d.Layer);
     d3.select("#tool-status").text(d["Radar Status"]);
     d3.select("#tool-pricing").text(d["Pricing Model"]);
+    d3.select("#tool-language").text(d.Language || "N/A");
     d3.select("#tool-features").text(d["Key Features"]);
     d3.select("#tool-summary").text(d["AI Summary"]);
     d3.select("#tool-url")
