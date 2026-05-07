@@ -12,8 +12,13 @@
     <div class="container">
         <header>
             <h1>AI Stack Radar</h1>
-            <p>Visualizing the ecosystem of AI agents and orchestration tools. Weekly updates!</p>
-            <p class="contact-info">To suggest additions or changes, please email <a href="mailto:hello@aistackradar.dev">hello@aistackradar.dev</a></p>
+            <p>
+                Visualizing the ecosystem of AI agents and orchestration tools. Weekly updates!
+                <a href="#" id="compare-link" class="compare-link">Compare Tool</a>
+            </p>
+            <p class="contact-info">
+                To suggest additions or changes, please email <a href="mailto:hello@aistackradar.dev">hello@aistackradar.dev</a>
+            </p>
         </header>
         
         <main>
@@ -93,6 +98,34 @@
         <footer>
         </footer>
     </div>
+
+    <div id="compare-dialog" class="hidden-dialog">
+        <div class="compare-overlay"></div>
+        <div class="compare-container">
+            <div class="compare-header">
+                <h2>Compare Tools</h2>
+                <button id="close-compare">&times;</button>
+            </div>
+            <div class="compare-grid">
+                <div class="compare-column" data-col="0">
+                    <input type="text" class="compare-search" placeholder="Search tool...">
+                    <div class="compare-list"></div>
+                    <div class="compare-selected"></div>
+                </div>
+                <div class="compare-column" data-col="1">
+                    <input type="text" class="compare-search" placeholder="Search tool...">
+                    <div class="compare-list"></div>
+                    <div class="compare-selected"></div>
+                </div>
+                <div class="compare-column" data-col="2">
+                    <input type="text" class="compare-search" placeholder="Search tool...">
+                    <div class="compare-list"></div>
+                    <div class="compare-selected"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="radar.js"></script>
 </body>
 </html>

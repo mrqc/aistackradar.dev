@@ -137,6 +137,87 @@ d3.csv("radar-data.csv").then(data => {
 
         renderList(filtered);
     }
+
+    // --- Compare Dialog Logic ---
+    const compareDialog = d3.select("#compare-dialog");
+    const compareColumns = d3.selectAll(".compare-column");
+
+    d3.select("#compare-link").on("click", (e) => {
+        e.preventDefault();
+        compareDialog.classed("hidden-dialog", false);
+        renderCompareLists();
+    });
+
+    d3.select("#close-compare").on("click", () => {
+        compareDialog.classed("hidden-dialog", true);
+    });
+
+    d3.select(".compare-overlay").on("click", () => {
+        compareDialog.classed("hidden-dialog", true);
+    });
+
+    function renderCompareLists(colIndex = null) {
+        compareColumns.each(function(_, i) {
+            if (colIndex !== null && i !== colIndex) return;
+
+            const col = d3.select(this);
+            const listContainer = col.select(".compare-list");
+            const currentSearch = col.select(".compare-search").property("value").toLowerCase();
+            
+            const filtered = allData.filter(tool => 
+                tool["Tool Name"].toLowerCase().includes(currentSearch)
+            );
+
+            listContainer.html("");
+            filtered.forEach(tool => {
+                listContainer.append("div")
+                    .attr("class", "compare-list-item")
+                    .text(tool["Tool Name"])
+                    .on("click", () => selectToolForCompare(tool, i));
+            });
+        });
+    }
+
+    compareColumns.select(".compare-search").on("input", function() {
+        const colIndex = +d3.select(this.parentNode).attr("data-col");
+        renderCompareLists(colIndex);
+    });
+
+    function selectToolForCompare(tool, colIndex) {
+        const col = d3.select(`.compare-column[data-col="${colIndex}"]`);
+        const selectedContainer = col.select(".compare-selected");
+        
+        selectedContainer.html(`
+            <div class="compare-tool-details">
+                <h3>${tool["Tool Name"]}</h3>
+                <div class="meta-item"><strong>Layer:</strong> ${tool.Layer}</div>
+                <div class="meta-item"><strong>Status:</strong> ${tool["Radar Status"]}</div>
+                <div class="meta-item"><strong>Pricing:</strong> ${tool["Pricing Model"]}</div>
+                <div class="meta-item"><strong>Language:</strong> ${tool.Language || 'N/A'}</div>
+                
+                <div class="description-section">
+                    <h4>Key Features</h4>
+                    <p>${tool["Key Features"]}</p>
+                </div>
+                <div class="description-section">
+                    <h4>AI Summary</h4>
+                    <p>${tool["AI Summary"]}</p>
+                </div>
+            </div>
+        `);
+
+        // Highlight selected in list
+        col.selectAll(".compare-list-item").classed("selected", d => false);
+        // We don't have data bound to these items in the same way, but we can find it by text or just re-render
+        // For simplicity, let's just re-render the list or find the element.
+        col.selectAll(".compare-list-item").each(function() {
+            if (d3.select(this).text() === tool["Tool Name"]) {
+                d3.select(this).classed("selected", true);
+            } else {
+                d3.select(this).classed("selected", false);
+            }
+        });
+    }
 });
 
 function renderRadar(nodes) {
